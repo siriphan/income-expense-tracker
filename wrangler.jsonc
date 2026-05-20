@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "income-expense-dashboard",
+  "name": "income-expense-tracker",
   "main": "src/worker.js",
   "compatibility_date": "2026-05-20",
   "assets": {
@@ -11,7 +11,7 @@
     {
       "binding": "DB",
       "database_name": "income-expense-dashboard-db",
-      "database_id": "REPLACE_WITH_D1_DATABASE_ID"
+      "database_id": "4ea2c6ef-d6c6-4b3c-b11f-4ea4eea43f64"
     }
   ],
   "observability": {
