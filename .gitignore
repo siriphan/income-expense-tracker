@@ -1,9 +1,5 @@
 node_modules/
 .wrangler/
-dist/
-build/
-.cache/
-.DS_Store
 .env
 .env.*
 *.log
