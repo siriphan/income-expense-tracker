@@ -1,35 +1,32 @@
-# บัญชีรายรับ-รายจ่าย Dashboard — GitHub + Cloudflare Workers
+# บัญชีรายรับ-รายจ่าย Dashboard — Workers + D1 Database
 
-โปรเจกต์นี้พร้อมสำหรับอัปโหลดขึ้น GitHub และ Deploy เป็น Cloudflare Workers Static Assets
+เวอร์ชันนี้บันทึกข้อมูลลงฐานข้อมูล Cloudflare D1 ทำให้เปิดจากเครื่องอื่น/มือถือ/เบราว์เซอร์อื่นแล้วเห็นข้อมูลเดียวกัน
 
 ## Login
 - User: `admin`
 - Password: `siriphan`
 
-## โครงสร้างไฟล์
-```text
-public/
-  index.html
-  gxHo.html
-  _headers
-wrangler.jsonc
-package.json
-.gitignore
-.github/workflows/deploy-cloudflare-workers.yml
-README.md
+## ค่าเริ่มต้นตามเดือนปัจจุบัน
+หน้า Dashboard จะเลือกเดือนตามวันที่ของเครื่องผู้ใช้โดยอัตโนมัติ เช่น ถ้าเปิดในเดือนพฤษภาคม ระบบจะเลือก `May` เป็นค่าเริ่มต้น
+
+## สร้าง D1 Database
+รันคำสั่งนี้:
+```bash
+npx wrangler d1 create income-expense-dashboard-db
+```
+Cloudflare จะแสดง `database_id` ให้คัดลอกไปใส่ใน `wrangler.jsonc` ตรงนี้:
+```json
+"database_id": "REPLACE_WITH_D1_DATABASE_ID"
 ```
 
-## สำคัญ: แก้ปัญหา Asset too large
-โปรเจกต์นี้ตั้งค่า Workers assets เป็น:
-```json
-"assets": {
-  "directory": "./public"
-}
+## สร้างตารางใน D1
+หลังแก้ `database_id` แล้วรัน:
+```bash
+npm install
+npx wrangler d1 execute income-expense-dashboard-db --file=./schema.sql --remote
 ```
-ดังนั้น Wrangler จะ upload เฉพาะไฟล์ใน `public/` และจะไม่เผลอ upload `node_modules/workerd` เหมือน error เดิม
 
 ## Deploy บนเครื่องตัวเอง
-ติดตั้ง Node.js แล้วรัน:
 ```bash
 npm install
 npx wrangler login
@@ -40,32 +37,35 @@ npm run deploy
 ```bash
 git init
 git add .
-git commit -m "Deploy income expense dashboard to Cloudflare Workers"
+git commit -m "Add D1 database dashboard"
 git branch -M main
 git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
 git push -u origin main
 ```
 
-## Deploy อัตโนมัติผ่าน GitHub Actions
-สร้าง GitHub Repository Secrets:
+## Deploy ผ่าน GitHub Actions
+เพิ่ม GitHub Secrets:
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`
 
-จากนั้น push เข้า branch `main` ระบบจะ deploy ด้วย workflow:
+จากนั้น push เข้า branch `main`
+
+## โครงสร้างไฟล์
 ```text
+public/
+  index.html
+  gxHo.html
+  _headers
+src/
+  worker.js
+schema.sql
+wrangler.jsonc
+package.json
 .github/workflows/deploy-cloudflare-workers.yml
+README.md
 ```
 
-## Cloudflare API Token permissions แนะนำ
-ใช้ Custom token ที่มีสิทธิ์อย่างน้อย:
-- Account > Workers Scripts > Edit
-- Account > Workers Routes > Edit ถ้ามี route
-- Account > Account Settings > Read
-
-ถ้าใช้ Workers Static Assets บน account เดียวกัน ให้ตรวจว่า token อยู่ใน account ID ที่ถูกต้อง
-
-## แก้ชื่อ Worker
-แก้ในไฟล์ `wrangler.jsonc`:
-```json
-"name": "income-expense-dashboard"
-```
+## หมายเหตุ
+- ไฟล์ static อยู่ใน `public/` เท่านั้น เพื่อป้องกันปัญหา upload `node_modules` ขนาดใหญ่
+- API `/api/state` ใช้ D1 binding ชื่อ `DB`
+- ข้อมูลทั้งหมดถูกเก็บเป็น JSON หนึ่ง record ในตาราง `dashboard_state`

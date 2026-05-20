@@ -1,11 +1,19 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "income-expense-dashboard",
+  "main": "src/worker.js",
   "compatibility_date": "2026-05-20",
   "assets": {
-    "directory": "./public",
-    "not_found_handling": "single-page-application"
+    "binding": "ASSETS",
+    "directory": "./public"
   },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "income-expense-dashboard-db",
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID"
+    }
+  ],
   "observability": {
     "enabled": true
   }

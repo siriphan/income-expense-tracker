@@ -1,10 +1,12 @@
 {
-  "name": "income-expense-workers-dashboard",
+  "name": "income-expense-workers-d1-dashboard",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "wrangler dev",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "db:init": "wrangler d1 execute income-expense-dashboard-db --file=./schema.sql --remote"
   },
   "devDependencies": {
     "wrangler": "^4.93.0"
