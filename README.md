@@ -1,13 +1,14 @@
-# Income Expense Dashboard — GitHub + Cloudflare Ready
+# Income Expense Dashboard — Numeric Summary + Export Fixed + Cloudflare Ready
 
-## Included fixes
-- Chart display fixed with `requestAnimationFrame` and explicit chart heights
-- Browser auto refresh/polling disabled: no `setInterval`, no auto polling
-- Manual refresh only via `โหลดข้อมูลล่าสุด` button
-- Monthly income/expense records CRUD
-- Cloudflare D1 persistence through `/api/state`
-- Worker name: `income-expense-tracker`
+## Included changes
+- Export รูปภาพแสดงข้อมูลจริงแล้ว: สรุปยอด + รายการรายรับ/รายจ่ายในเดือนที่เลือก
+- เพิ่มปุ่ม `แสดงผลบนมือถือแนวตั้ง`
+- ยกเลิกกราฟวงกลมรายจ่าย เปลี่ยนเป็นตัวเลข Pending / Completed
+- `ยอดรายรับ` เปลี่ยนเป็น `รายรับทั้งปี` และแสดงเป็นตัวเลข
+- `สัดส่วนรายรับ` ยกเลิกกราฟวงกลม และแสดงเป็นตัวเลข/เปอร์เซ็นต์
+- ไม่มี auto refresh/polling
 - D1 database_id: `4ea2c6ef-d6c6-4b3c-b11f-4ea4eea43f64`
+- Worker name: `income-expense-tracker`
 
 ## Deploy
 ```bash
@@ -20,14 +21,8 @@ npm run deploy
 ```bash
 git init
 git add .
-git commit -m "Deploy income expense dashboard"
+git commit -m "Deploy income expense dashboard numeric version"
 git branch -M main
 git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
 git push -u origin main
-```
-
-## GitHub Secrets
-```text
-CLOUDFLARE_API_TOKEN
-CLOUDFLARE_ACCOUNT_ID
 ```
